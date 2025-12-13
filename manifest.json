@@ -1,0 +1,8 @@
+{
+  "name": "Task Pace Tracker",
+  "short_name": "PaceTracker",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#333333"
+}
