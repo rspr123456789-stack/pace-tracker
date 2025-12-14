@@ -215,7 +215,8 @@ function buildCalendar(data, days) {
     const cell = document.createElement("div");
     cell.className = "day " + color(p);
     cell.innerHTML = d + "<br>" + p.toFixed(0) + "%";
-    calendar.appendChild(cell);
+    cell.onclick = () => openPopup(key, actual);
+calendar.appendChild(cell);
   }
 }
 
@@ -227,6 +228,51 @@ updateAll();
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
+let selectedDateKey = null;
+
+function openPopup(dateKey, currentMinutes) {
+  selectedDateKey = dateKey;
+  document.getElementById("popupDate").innerText = dateKey;
+  document.getElementById("popupMinutes").value = currentMinutes || 0;
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+function savePopup() {
+  const mins = Number(document.getElementById("popupMinutes").value) || 0;
+  const data = loadData();
+  data[selectedDateKey] = mins;
+  saveData(data);
+  closePopup();
+  updateAll();
+}
 </script>
+<!-- Edit Day Popup -->
+<div id="popup" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.5);
+  align-items:center;
+  justify-content:center;
+">
+  <div style="
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    width:80%;
+    max-width:300px;
+  ">
+    <h3 id="popupDate"></h3>
+    <input type="number" id="popupMinutes" placeholder="Enter minutes">
+    <br><br>
+    <button onclick="savePopup()">Save</button>
+    <button onclick="closePopup()">Cancel</button>
+  </div>
+</div>
 </body>
 </html>
